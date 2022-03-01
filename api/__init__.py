@@ -26,9 +26,9 @@ def create_app(test_config=None):
     # Register DB commands
     init_app(app)
 
-    # from . import auth
-    # app.register_blueprint(auth.bp)
-    # CORS(auth.bp)
+    from . import auth
+    app.register_blueprint(auth.bp)
+    CORS(auth.bp)
 
     # from . import users
     # app.register_blueprint(users.bp)

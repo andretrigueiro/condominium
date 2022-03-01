@@ -5,12 +5,12 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from api.db.mongodb.users_db import find_all, find_by_email, find_one, set_host, insert_one
+from api.db.mongodb.users_db import insert_one, find_by_user, find_all
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-def check_user(user_email):
-    if find_by_email(user_email):
+def check_user(user):
+    if find_by_user(user):
             return True
     return False
 
@@ -48,38 +48,43 @@ def login():
     if request.method == 'POST':
         post_data = request.get_json()
 
-        email = post_data.get('email')
+        user_login = post_data.get('user')
         password = post_data.get('password')
         error = None
 
-        user = find_by_email({"email": email})
+        user = find_by_user({"user": user_login})
 
         if user is None:
-            response_object['message'] = 'Couldnt find email.'
-            response_object['user_email'] = ''
-            error = 'Couldnt find email.'
-        if not check_password_hash(user['password'], password):
+            response_object['message'] = 'Couldnt find user.'
+            response_object['user'] = ''
+            error = 'Couldnt find user.'
+            print("enter user")
+
+        # elif not check_password_hash(user['password'], password):
+        elif not (user['password'] == password):
             response_object['message'] = 'Incorrect password.'
-            response_object['user_email'] = ''
+            response_object['user'] = ''
             error = 'Incorrect password.'
+            print("enter pass")
 
         if error is None:
-            print("- What is in session before clear?")
-            print(session)
+            # print("- What is in session before clear?")
+            # print(session)
             session.clear()
 
-            session['user_email'] = user['email']
+            session['user'] = user['user']
             session.modified = True
-            session.permanent = True
+            # session.permanent = True
 
-            print("- Session new email: ", session['user_email'])
+            # print("- Session new user: ", session['user'])
 
-            print("- What is in the final session login?")
-            print(session)
+            # print("- What is in the final session login?")
+            # print(session)
 
-            response_object['user_email'] = user['email']
+            response_object['user'] = user['user']
+            response_object['type'] = user['type']
             response_object['message'] = 'User logged in!'
-            check_session()
+            # check_session()
 
     return jsonify(response_object)
 
@@ -91,12 +96,12 @@ def check_session():
 def load_logged_in_user():
     # print("- Initial before_app_request SESSION: ")
     # print(session)
-    user_email = session.get('user_email')
+    user = session.get('user')
 
-    if user_email is None:
+    if user is None:
         g.user = None
     else:
-        g.user = find_by_email(user_email)
+        g.user = find_by_user(user)
 
 @bp.route('/logout')
 def logout():
