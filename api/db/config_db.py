@@ -4,6 +4,16 @@ from flask.cli import with_appcontext
 from api.db.mongodb import DATABASE
 from api.db.userdata import ADM, RESIDENT, HOUSES
 
+# Command line to populate the DB with test users
+@click.command('test-db')
+@with_appcontext
+def test_db_command():
+    """Populate DB with data."""
+    selected_house = { "number": 2 }
+    new_onwer = { "$set": { "onwer": "621f788affa87cb9f5139984" } }
+    DATABASE.houses.update_one(selected_house, new_onwer)
+    click.echo('Add onwer to house.')
+
 # Associate the db with G element
 def get_db():
     if 'db' not in g:
@@ -56,3 +66,4 @@ def init_app(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(populate_db_command)
     app.cli.add_command(close_db_command)
+    app.cli.add_command(test_db_command)

@@ -6,8 +6,16 @@
         <div class="menu-welcome"> Welcome, {{user_logged_in}}! </div>
         <div id="adm-menu">
           <b-list-group class="menu-part-one">
-            <b-list-group-item button>Register New Resident</b-list-group-item>
-            <b-list-group-item button>Remove Resident</b-list-group-item>
+
+            <b-list-group-item button type="button" v-b-modal.new-resident-modal>
+              Register New Resident
+            </b-list-group-item>
+            <b-list-group-item button type="button" v-b-modal.add-resident-modal>
+              Add Resident to House
+            </b-list-group-item>
+            <b-list-group-item button type="button" v-b-modal.new-resident-modal>
+              Remove Resident of House
+            </b-list-group-item>
             <b-list-group-item button>Set cond. value</b-list-group-item>
             <b-list-group-item button>Fine Resident</b-list-group-item>
           </b-list-group>
@@ -19,6 +27,85 @@
         </div>
       </b-col>
 
+      <!-- NEW RESIDENT MODAL -->
+      <b-modal ref="NewResidentModal"
+              id="new-resident-modal"
+              title="New Resident"
+              hide-footer>
+        <b-form @submit="onSubmitNewResident" class="w-100">
+          <b-form-group id="form-name-group"
+                      label="Name:"
+                      label-for="form-name-input">
+            <b-form-input id="form-name-input"
+                          type="text"
+                          v-model="residentForm.name"
+                          required
+                          placeholder="Enter Name">
+            </b-form-input>
+          </b-form-group>
+
+          <b-form-group id="form-birthdate-group"
+                        label="Birth Date:"
+                        label-for="form-birthdate-input">
+            <b-form-input id="form-birthdate-input"
+                          type="text"
+                          v-model="residentForm.day"
+                          required
+                          placeholder="Day:">
+            </b-form-input>
+            <b-form-input id="form-birthdate-input"
+                          type="text"
+                          v-model="residentForm.month"
+                          required
+                          placeholder="Month:">
+            </b-form-input>
+            <b-form-input id="form-birthdate-input"
+                          type="text"
+                          v-model="residentForm.year"
+                          required
+                          placeholder="Year:">
+            </b-form-input>
+          </b-form-group>
+
+          <b-form-group id="form-email-group"
+                      label="Email:"
+                      label-for="form-email-input">
+            <b-form-input id="form-email-input"
+                          type="text"
+                          v-model="residentForm.email"
+                          required
+                          placeholder="Enter Email">
+            </b-form-input>
+          </b-form-group>
+
+          <b-button-group>
+            <b-button type="submit" variant="primary">Submit</b-button>
+          </b-button-group>
+        </b-form>
+
+      </b-modal>
+
+      <!-- ADD RESIDENT MODAL -->
+      <b-modal ref="AddResidentModal"
+              id="add-resident-modal"
+              title="Add Resident"
+              hide-footer>
+        <b-form @submit="onSubmitAddResident" class="w-100">
+
+          <b-form-select v-model="houseSelected" :options="houseOptions"></b-form-select>
+          <b-form-select v-model="residentSelected" :options="residentOptions"></b-form-select>
+          <div class="mt-3">
+            House Selected: {{ houseSelected }} | Resident Selected: {{ residentSelected }}
+          </div>
+
+          <b-button-group>
+            <b-button type="submit" variant="primary">Submit</b-button>
+          </b-button-group>
+        </b-form>
+
+      </b-modal>
+
+      <!-- ADM CONTENT PART OF PAGE -->
       <b-col class="adm-content" cols="10">
         <b-container>
           <b-row align-v="start" align-h="center">
@@ -30,31 +117,27 @@
                 class="mb-2 house-card"
               >
                 <b-card-text>
-                  <p>Number: {{ houseInfo.number }}</p>
+                  <p>Number: {{ houseSelected }}</p>
                   <p>Onwer: {{ houseInfo.onwer }}</p>
                   <p>Residents: {{ houseInfo.residents }}</p>
                   <p>Cond. Price: ${{ houseInfo.condominiumPrice }}</p>
-
                 </b-card-text>
               </b-card>
+
+              <b-alert :show="showMessage" dismissible>
+                {{ message }}
+              </b-alert>
             </b-col>
 
             <b-col cols="4">
-              <b-dropdown id="dropdown-1"
-                text="Select house"
-                variant="secondary"
-                class="house-select-b">
-                  <b-dropdown-item-button value=1 v-model="houseNumber">
-                    House 1
-                  </b-dropdown-item-button>
-                  <b-dropdown-item-button value=2 v-model="houseNumber">
-                    House 2
-                  </b-dropdown-item-button>
-                  <b-dropdown-item-button>House 3</b-dropdown-item-button>
-                  <b-dropdown-item-button>House 4</b-dropdown-item-button>
-                  <b-dropdown-item-button>House 5</b-dropdown-item-button>
-                  <b-dropdown-item-button>House 6</b-dropdown-item-button>
-              </b-dropdown>
+              <div>
+                <b-form-select
+                  v-model="houseSelected"
+                  :options="houseOptions"
+                  autofocus
+                >
+                </b-form-select>
+              </div>
             </b-col>
 
           </b-row>
@@ -73,7 +156,19 @@ export default {
   data() {
     return {
       user_logged_in: '',
-      houseNumber: 1,
+      message: '',
+      showMessage: false,
+      houseSelected: 1,
+      houseOptions: [
+        { value: '1', text: 'House 1' },
+        { value: '2', text: 'House 2' },
+        { value: '3', text: 'House 3' },
+        { value: '4', text: 'House 4' },
+        { value: '5', text: 'House 5' },
+        { value: '6', text: 'House 6' },
+      ],
+      residentSelected: '',
+      residentOptions: [],
       houseInfo: {
         number: 1,
         onwer: 'Jose',
@@ -83,28 +178,129 @@ export default {
         payments: [],
         fines: [],
       },
+      residentForm: {
+        user: '',
+        password: '',
+        name: '',
+        email: '',
+        type: '',
+        day: '',
+        month: '',
+        year: '',
+      },
     };
+  },
+  watch: {
+    houseSelected() {
+      this.updateHouse();
+    },
   },
   methods: {
     setUser() {
       this.user_logged_in = this.$cookies.get('user');
     },
-    setHouse(houseNumber) {
-      const path = 'http://localhost:5000/users/houses';
-      axios.post(path, houseNumber)
+    updateHouse() {
+      const payload = {
+        houseNumber: this.houseSelected,
+      };
+      this.getHouse(payload);
+    },
+    getResidents() {
+      const path = 'http://localhost:5000/users/all_residents';
+      axios.get(path)
         .then((res) => {
-          this.houseInfo.number = res.data.number;
-          this.houseInfo.onwer = res.data.onwer;
-          this.houseInfo.residents = res.data.residents;
+          this.residentOptions = res.data.residents;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.log(error);
         });
     },
-    // houseNumberSelection(evt) {
-    //   pa
-    // },
+    getHouse(payload) {
+      const path = 'http://localhost:5000/houses/select_house';
+      axios.post(path, payload)
+        .then((res) => {
+          this.message = res.data.message;
+          this.houseInfo.number = res.data.number;
+          this.houseInfo.onwer = res.data.onwer;
+          this.houseInfo.residents = res.data.residents;
+          this.houseInfo.condominiumPrice = res.data.condominiumP;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    registerResident(payload) {
+      const path = 'http://localhost:5000/users/set_new_resident';
+      axios.post(path, payload)
+        .then((res) => {
+          if (res.data.message === 'Resident added!') {
+            this.message = res.data.message;
+            this.showMessage = true;
+            this.residentForm.user = res.data.user;
+            this.residentForm.password = res.data.password;
+            this.$refs.NewResidentModal.hide();
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    onSubmitNewResident(evt) {
+      evt.preventDefault();
+      const payload = {
+        name: this.residentForm.name,
+        email: this.residentForm.email,
+        day: this.residentForm.day,
+        month: this.residentForm.month,
+        year: this.residentForm.year,
+      };
+      this.registerResident(payload);
+      this.initForm();
+    },
+    addResident(payload) {
+      const path = 'http://localhost:5000/users/add_new_resident';
+      axios.post(path, payload)
+        .then((res) => {
+          if (res.data.message === 'Resident added to house!') {
+            this.message = res.data.message;
+            this.$refs.NewResidentModal.hide();
+            console.log(this.message);
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    onSubmitAddResident(evt) {
+      evt.preventDefault();
+      const payload = {
+        house: this.houseSelected,
+        resident: this.residentSelected,
+      };
+      console.log(payload.resident);
+      this.addResident(payload);
+      this.initForm();
+    },
+    initForm() {
+      this.residentForm.user = '';
+      this.residentForm.password = '';
+      this.residentForm.name = '';
+      this.residentForm.email = '';
+      this.residentForm.type = '';
+      this.residentForm.day = '';
+      this.residentForm.month = '';
+      this.residentForm.year = '';
+    },
+  },
+  mounted() {
+    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+      console.log('Modal is about to be shown', bvEvent, modalId);
+      this.getResidents();
+    });
   },
   created() {
     this.setUser();

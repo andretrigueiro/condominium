@@ -5,7 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from api.db.mongodb.users_db import insert_one, find_by_user, find_all
+from api.db.mongodb.users_db import insert_one, find_by_user, find_all_residents
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
