@@ -194,8 +194,9 @@
                 <b-card-text>
                   <p>Number: {{ houseSelected }}</p>
                   <p>Onwer: {{ houseInfo.onwer }}</p>
-                  <p>Residents: {{ houseInfo.residents }}</p>
                   <p>Cond. Price: ${{ houseInfo.condominiumPrice }}</p>
+                  <p>Residents: {{ houseInfo.residents }}</p>
+                  <p>Fines: {{ houseInfo.fines }}</p>
                 </b-card-text>
               </b-card>
 
@@ -257,7 +258,7 @@ export default {
       residentsHouseOptions: [],
       houseInfo: {
         number: 1,
-        onwer: 'Jose',
+        onwer: '',
         residents: [],
         condominiumPrice: 0.00,
         debts: [],
@@ -323,8 +324,9 @@ export default {
           this.message = res.data.message;
           this.houseInfo.number = res.data.number;
           this.houseInfo.onwer = res.data.onwer;
-          this.houseInfo.residents = res.data.residents;
           this.houseInfo.condominiumPrice = res.data.condominiumP;
+          this.houseInfo.residents = res.data.residents;
+          this.houseInfo.fines = res.data.fines;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -366,7 +368,7 @@ export default {
         .then((res) => {
           if (res.data.message === 'Resident added to house!') {
             this.message = res.data.message;
-            this.$refs.NewResidentModal.hide();
+            this.$refs.AddResidentModal.hide();
           }
         })
         .catch((error) => {
@@ -389,7 +391,7 @@ export default {
         .then((res) => {
           if (res.data.message === 'Resident removed of house!') {
             this.message = res.data.message;
-            this.$refs.NewResidentModal.hide();
+            this.$refs.RemoveResidentModal.hide();
           }
         })
         .catch((error) => {
@@ -412,7 +414,7 @@ export default {
         .then((res) => {
           if (res.data.message === 'New Price Updated!') {
             this.message = res.data.message;
-            this.$refs.NewResidentModal.hide();
+            this.$refs.SetPriceModal.hide();
           }
         })
         .catch((error) => {
@@ -434,7 +436,7 @@ export default {
         .then((res) => {
           if (res.data.message === 'Fine Applied!') {
             this.message = res.data.message;
-            this.$refs.NewResidentModal.hide();
+            this.$refs.ApplyFineModal.hide();
           }
         })
         .catch((error) => {
@@ -472,6 +474,7 @@ export default {
   },
   created() {
     this.setUser();
+    this.updateHouse();
   },
 };
 </script>

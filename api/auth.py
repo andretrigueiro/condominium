@@ -55,8 +55,6 @@ def login():
 # Function called before each request to check if the user is logged. Used for security
 @bp.before_app_request
 def load_logged_in_user():
-    print("- Initial before_app_request SESSION: ")
-    print(session)
     user = session.get('user')
 
     if user is None:

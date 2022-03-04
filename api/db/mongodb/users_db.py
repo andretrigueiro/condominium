@@ -28,6 +28,12 @@ def find_all_residents():
     result = convert_all_id_to_string(result)
     return result
 
+# Get all houses in database, with IDs converted to string
+def find_all_houses():
+    result = list(DATABASE.houses.find())
+    result = convert_all_id_to_string(result)
+    return result
+
 # Get all residents of one specific house in database
 def find_residents_in_house(house_number):
     house = get_house(house_number)
@@ -119,6 +125,19 @@ def set_new_price(house, new_price):
     message = "New Price Updated!"
 
     return message
+
+# Set the onwer of houeses to condominiun when the database is populated
+def set_initial_onwer():
+    houses = find_all_houses()
+
+    onwer = find_by_user({"user": 'condominium'})
+    onwer_id = onwer['_id']
+
+    for house in range(len(houses)):
+        house_number = houses[house]['number']
+        set_onwer(house_number, onwer_id)
+
+    convert_all_id_to_string(houses)
 
 """
 Other Functions ------------------------------------------------------------------------------------------------------

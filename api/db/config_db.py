@@ -7,7 +7,9 @@ import click
 from flask import g
 from flask.cli import with_appcontext
 from api.db.mongodb import DATABASE
+from api.db.mongodb.users_db import set_initial_onwer
 from api.db.userdata import ADM, RESIDENT, HOUSES
+
 
 # Associate the db with G element
 def get_db():
@@ -21,9 +23,10 @@ def get_db():
 @with_appcontext
 def populate_db_command():
     """Populate DB with data."""
-    DATABASE.adm.insert_many(ADM)
-    DATABASE.residents.insert_many(RESIDENT)
     DATABASE.houses.insert_many(HOUSES)
+    DATABASE.residents.insert_many(RESIDENT)
+    DATABASE.adm.insert_many(ADM)
+    set_initial_onwer()
     click.echo('Populated the database.')
 
 # Initiate the database

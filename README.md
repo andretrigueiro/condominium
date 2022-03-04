@@ -26,12 +26,12 @@ Install the frontend dependencies with npm. To configure Vue CLI, you can copy t
 > https://testdriven.io/blog/developing-a-single-page-app-with-flask-and-vuejs/
 
 If you already have python installed, install the virtual enviroment. Acess the api directory and run these commands:
-> python3.9 -m venv env
+> $ python3.9 -m venv env
 
-> source env/bin/activate
+> $ source env/bin/activate
 
 After that, use the pip tool to install the requirements. Run this command on terminal:
-> pip install -r api/requirements/requirements.txt
+> (env)$ pip install -r api/requirements/requirements.txt
 
 # How to run the project
 You will need 2 different terminals to run the application.
@@ -79,4 +79,49 @@ To test if the app is working fine, point your browser at http://localhost:8080.
 ![](/client/public/homepage.png)
 
 # How to use the project
+In the homepage, press the login button and enter the user.
+
+For adm permissions:
+user: syndicate.cond
+passwork: 123
+
+For resident permissions:
+user: maria.cond
+passwork: 12345
+
+Adm user can:
+- Register new residents.
+- Add residents to houses.
+- Remove residents of houses.
+- Set condominium values.
+- Fine residents for some reason.
+
+Resident user can:
+
+
+# Known issues and Improviments
+The project is very basic, so it doenst have security focus. Some acess functions and comparisons are very limited and simple.
+
+#### Backend
+Auth:
+- Put the Session tool to work. After that:
+- Session - before_app_request
+- Session - logout
+- Session - login required
+
+#### Frontend
+Big issue:
+- If the user press F5, the cookie is reseted. Need to use some solution as vuex to double store the user logged.
+- The cookie issue is related to permisions of user logged in.
+
+Login:
+- Check if some user is logged in to log automatically
+
+Header:
+- Put the other nav-itens
+
+House card:
+- Update the card to modify the content automatically. Couldn't resolve this in time
+- Organize better the data displayed
+- Maybe change the Card component to table
 
