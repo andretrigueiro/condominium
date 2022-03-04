@@ -33,6 +33,9 @@ If you already have python installed, install the virtual enviroment. Acess the 
 After that, use the pip tool to install the requirements. Run this command on terminal:
 > (env)$ pip install -r api/requirements/requirements.txt
 
+### Database config
+I used a .env file to store the MongoDB connection. If you want to do the same, install dotenv package with pip and set the variables in "/api/db/mongodb/__init__.py"
+
 # How to run the project
 You will need 2 different terminals to run the application.
 
@@ -68,6 +71,8 @@ If you want to populate the database with test data, open a new terminal, activa
 
 After that, you can close the terminal.
 
+Note: Remember to set the DATABASE connection.
+
 ### Vue section
 
 Open a new terminal. In the client folder of the project, activate vue:
@@ -79,15 +84,18 @@ To test if the app is working fine, point your browser at http://localhost:8080.
 ![](/client/public/homepage.png)
 
 # How to use the project
+Note: Right now, the House Card doesn't update some stats automatically.
+If you make some change, just select other house and come back to the house that you made the changes.
+
 In the homepage, press the login button and enter the user.
 
 For adm permissions:
-user: syndicate.cond
-passwork: 123
+- user: syndicate.cond
+- password: 123
 
 For resident permissions:
-user: maria.cond
-passwork: 12345
+- user: maria.cond
+- password: 12345
 
 Adm user can:
 - Register new residents.

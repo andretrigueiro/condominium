@@ -50,6 +50,7 @@ def set_new_resident():
         day = post_data.get('day')
         month = post_data.get('month')
         year = post_data.get('year')
+        house_number = post_data.get('house_number')
 
         user = (name.lower() + '.cond')
 
@@ -64,10 +65,12 @@ def set_new_resident():
             'name': name,
             'email': email,
             'type': type,
-            'birthdate': birthdate
+            'birthdate': birthdate,
+            'house': house_number
         }
 
         insert_one(newResident)
+        message = resident_to_house("add", house_number, newResident['user'])
 
         response_object['user'] = user
         response_object['password'] = password

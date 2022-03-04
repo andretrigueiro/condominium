@@ -22,6 +22,7 @@ RESIDENT = [
         'email': 'condominium@email.com',
         'type': 'resident',
         'birthdate': 'test',
+        'house': '3',
         'first_login': False
     },
     {
@@ -31,6 +32,7 @@ RESIDENT = [
         'email': 'jose@email.com',
         'type': 'resident',
         'birthdate': '11/11/1111',
+        'house': '1',
         'first_login': False
     },
     {
@@ -40,6 +42,7 @@ RESIDENT = [
         'email': 'maria@email.com',
         'type': 'resident',
         'birthdate': '22/22/2222',
+        'house': '2',
         'first_login': True
     },
 ]

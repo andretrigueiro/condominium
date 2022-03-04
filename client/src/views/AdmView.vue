@@ -83,6 +83,17 @@
             </b-form-input>
           </b-form-group>
 
+          <b-form-group id="form-house-group"
+                      label="House:"
+                      label-for="form-house-input">
+            <b-form-input id="form-house-input"
+                          type="text"
+                          v-model="residentForm.house_number"
+                          required
+                          placeholder="Enter House Number (1-6)">
+            </b-form-input>
+          </b-form-group>
+
           <b-button-group>
             <b-button type="submit" variant="primary">Submit</b-button>
           </b-button-group>
@@ -274,6 +285,7 @@ export default {
         day: '',
         month: '',
         year: '',
+        house_number: '',
       },
     };
   },
@@ -358,6 +370,7 @@ export default {
         day: this.residentForm.day,
         month: this.residentForm.month,
         year: this.residentForm.year,
+        house_number: this.house_number,
       };
       this.registerResident(payload);
       this.initForm();

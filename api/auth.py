@@ -48,6 +48,8 @@ def login():
 
             response_object['user'] = user['user']
             response_object['type'] = user['type']
+            if user['type'] == 'resident':
+                response_object['house_number'] = user['house']
             response_object['message'] = 'User logged in!'
 
     return jsonify(response_object)

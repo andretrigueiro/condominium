@@ -54,6 +54,7 @@ export default {
     return {
       user_id_logged: '',
       type: '',
+      house_number: '',
       message: '',
       showMessage: false,
       loginUserForm: {
@@ -76,7 +77,9 @@ export default {
             this.message = res.data.message;
             this.user_id_logged = res.data.user;
             this.type = res.data.type;
+            this.house_number = res.data.house_number;
             this.$cookies.set('user', this.user_id_logged);
+            this.$cookies.set('house', this.house_number);
             this.$refs.LogInModal.hide();
             if (this.type === 'resident') {
               this.$router.push('Resident');
