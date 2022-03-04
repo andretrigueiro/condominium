@@ -1,11 +1,16 @@
-from flask import Flask, jsonify, session
+"""
+Contains the application factory function.
+Configure the flask app, register the blueprints, set the CORS and add command line commands
+"""
+
+from flask import Flask, jsonify
 from flask_cors import CORS
 
+# Import command line commands
 from api.db.config_db import init_app
 
-# configuration
-
-def create_app(test_config=None):
+# Factory function
+def create_app():
 
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -26,6 +31,7 @@ def create_app(test_config=None):
     # Register DB commands
     init_app(app)
 
+    # Register blueprints and add it to CORS
     from . import auth
     app.register_blueprint(auth.bp)
     CORS(auth.bp)

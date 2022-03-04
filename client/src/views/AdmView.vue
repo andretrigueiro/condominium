@@ -2,6 +2,7 @@
   <b-container fluid class="adm-interface">
     <b-row>
 
+      <!-- MENU PART OF PAGE -->
       <b-col class="adm-sidebar" cols="2">
         <div class="menu-welcome"> Welcome, {{user_logged_in}}! </div>
         <div id="adm-menu">
@@ -13,11 +14,15 @@
             <b-list-group-item button type="button" v-b-modal.add-resident-modal>
               Add Resident to House
             </b-list-group-item>
-            <b-list-group-item button type="button" v-b-modal.new-resident-modal>
+            <b-list-group-item button type="button" v-b-modal.remove-resident-modal>
               Remove Resident of House
             </b-list-group-item>
-            <b-list-group-item button>Set cond. value</b-list-group-item>
-            <b-list-group-item button>Fine Resident</b-list-group-item>
+            <b-list-group-item button type="button" v-b-modal.set-price-modal>
+              Set cond. value
+            </b-list-group-item>
+            <b-list-group-item button type="button" v-b-modal.apply-fine-modal>
+              Fine Resident
+            </b-list-group-item>
           </b-list-group>
           <b-list-group class="menu-part-two">
             <b-list-group-item button>Register New Onwer</b-list-group-item>
@@ -105,6 +110,76 @@
 
       </b-modal>
 
+      <!-- REMOVE RESIDENT MODAL -->
+      <b-modal ref="RemoveResidentModal"
+              id="remove-resident-modal"
+              title="Remove Resident"
+              hide-footer>
+        <b-form @submit="onSubmitRemoveResident" class="w-100">
+
+          <b-form-select v-model="houseSelected" :options="houseOptions"></b-form-select>
+          <b-form-select
+            v-model="residentHouseSelected"
+            :options="residentsHouseOptions"
+          >
+          </b-form-select>
+
+          <div class="mt-3">
+            House Selected: {{ houseSelected }} | Resident Selected: {{ residentHouseSelected }}
+          </div>
+
+          <b-button-group>
+            <b-button type="submit" variant="primary">Submit</b-button>
+          </b-button-group>
+        </b-form>
+
+      </b-modal>
+
+      <!-- SET CONDOMINIUM VALUE MODAL -->
+      <b-modal ref="SetPriceModal"
+              id="set-price-modal"
+              title="Set Condominium Price"
+              hide-footer>
+        <b-form @submit="onSubmitSetPrice" class="w-100">
+
+          <b-form-select v-model="houseSelected" :options="houseOptions"></b-form-select>
+          <b-form-input v-model="newPrice" placeholder="Enter Cond. Valeu"></b-form-input>
+
+          <div class="mt-3">
+            House Selected: {{ houseSelected }} | New cond price: ${{ newPrice }}
+          </div>
+
+          <b-button-group>
+            <b-button type="submit" variant="primary">Submit</b-button>
+          </b-button-group>
+        </b-form>
+
+      </b-modal>
+
+      <!-- APPLY FINE MODAL -->
+      <b-modal ref="ApplyFineModal"
+              id="apply-fine-modal"
+              title="Apply Fine"
+              hide-footer>
+        <b-form @submit="onSubmitApplyFine" class="w-100">
+
+          <b-form-select v-model="houseSelected" :options="houseOptions"></b-form-select>
+          <b-form-select v-model="fineSelected" :options="fineOptions"></b-form-select>
+          <b-form-input v-model="finePrice" placeholder="Enter Fine Price"></b-form-input>
+
+          <div class="mt-3">
+            House Selected: {{ houseSelected }} |
+            Fine Reason: {{fineSelected}} |
+            Fine price: ${{ finePrice }}
+          </div>
+
+          <b-button-group>
+            <b-button type="submit" variant="primary">Submit</b-button>
+          </b-button-group>
+        </b-form>
+
+      </b-modal>
+
       <!-- ADM CONTENT PART OF PAGE -->
       <b-col class="adm-content" cols="10">
         <b-container>
@@ -158,6 +233,8 @@ export default {
       user_logged_in: '',
       message: '',
       showMessage: false,
+      newPrice: 0.00,
+      finePrice: 0.00,
       houseSelected: 1,
       houseOptions: [
         { value: '1', text: 'House 1' },
@@ -167,8 +244,17 @@ export default {
         { value: '5', text: 'House 5' },
         { value: '6', text: 'House 6' },
       ],
+      fineSelected: null,
+      fineOptions: [
+        { value: null, text: 'Please select an option' },
+        { value: 'Delay', text: 'Delay' },
+        { value: 'Noise', text: 'Noise' },
+        { value: 'Dirt', text: 'Dirt' },
+      ],
       residentSelected: '',
       residentOptions: [],
+      residentHouseSelected: '',
+      residentsHouseOptions: [],
       houseInfo: {
         number: 1,
         onwer: 'Jose',
@@ -205,11 +291,25 @@ export default {
       };
       this.getHouse(payload);
     },
-    getResidents() {
-      const path = 'http://localhost:5000/users/all_residents';
+    getResidentsOptions() {
+      const path = 'http://localhost:5000/users/all_residents_options';
       axios.get(path)
         .then((res) => {
           this.residentOptions = res.data.residents;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    getResidentsOfHouseOptions() {
+      const path = 'http://localhost:5000/users/residents_of_house_options';
+      const payload = {
+        house: this.houseSelected,
+      };
+      axios.post(path, payload)
+        .then((res) => {
+          this.residentsHouseOptions = res.data.residents;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -267,7 +367,6 @@ export default {
           if (res.data.message === 'Resident added to house!') {
             this.message = res.data.message;
             this.$refs.NewResidentModal.hide();
-            console.log(this.message);
           }
         })
         .catch((error) => {
@@ -281,9 +380,76 @@ export default {
         house: this.houseSelected,
         resident: this.residentSelected,
       };
-      console.log(payload.resident);
       this.addResident(payload);
       this.initForm();
+    },
+    removeResidentFromHouse(payload) {
+      const path = 'http://localhost:5000/users/remove_resident_house';
+      axios.post(path, payload)
+        .then((res) => {
+          if (res.data.message === 'Resident removed of house!') {
+            this.message = res.data.message;
+            this.$refs.NewResidentModal.hide();
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    onSubmitRemoveResident(evt) {
+      evt.preventDefault();
+      const payload = {
+        house: this.houseSelected,
+        resident: this.residentHouseSelected,
+      };
+      this.removeResidentFromHouse(payload);
+      this.initForm();
+    },
+    setCondPrice(payload) {
+      const path = 'http://localhost:5000/houses/set_price';
+      axios.post(path, payload)
+        .then((res) => {
+          if (res.data.message === 'New Price Updated!') {
+            this.message = res.data.message;
+            this.$refs.NewResidentModal.hide();
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    onSubmitSetPrice(evt) {
+      evt.preventDefault();
+      const payload = {
+        house: this.houseSelected,
+        price: this.newPrice,
+      };
+      this.setCondPrice(payload);
+    },
+    applyFine(payload) {
+      const path = 'http://localhost:5000/houses/apply_fine';
+      axios.post(path, payload)
+        .then((res) => {
+          if (res.data.message === 'Fine Applied!') {
+            this.message = res.data.message;
+            this.$refs.NewResidentModal.hide();
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    onSubmitApplyFine(evt) {
+      evt.preventDefault();
+      const payload = {
+        house: this.houseSelected,
+        reason: this.fineSelected,
+        price: this.finePrice,
+      };
+      this.applyFine(payload);
     },
     initForm() {
       this.residentForm.user = '';
@@ -299,7 +465,9 @@ export default {
   mounted() {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       console.log('Modal is about to be shown', bvEvent, modalId);
-      this.getResidents();
+      this.getResidentsOptions();
+      this.getResidentsOfHouseOptions();
+      console.log(this.residentsHouseOptions);
     });
   },
   created() {

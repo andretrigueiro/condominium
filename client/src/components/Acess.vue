@@ -68,12 +68,6 @@ export default {
     },
   },
   methods: {
-    checkUser() {
-      if (!this.$cookies.get('user')) {
-        return false;
-      }
-      return true;
-    },
     loginUser(payload) {
       const path = 'http://localhost:5000/auth/login';
       axios.post(path, payload)

@@ -7,8 +7,6 @@
 </template>
 
 <script>
-// import axios from 'axios';
-// import Alert from './Alert.vue';
 
 export default {
   name: 'Header',

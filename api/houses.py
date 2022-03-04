@@ -1,11 +1,17 @@
-from api.db.mongodb.users_db import insert_one, find_by_user, find_all_residents, get_onwer, get_house
+"""
+Houses related functions.
+In this project, the condominium properties are being treated as houses.
+"""
+
+from api.db.mongodb.users_db import get_onwer, get_house, set_new_price, apply_new_fine
 
 from flask import (
-    Blueprint, flash, g, jsonify, request, session
+    Blueprint, jsonify, request
 )
 
 bp = Blueprint('houses', __name__, url_prefix='/houses')
 
+# Function to return the data of a especific house requested by client
 @bp.route('/select_house', methods=('GET', 'POST'))
 def select_house():
     response_object = {'status': 'success'}
@@ -13,8 +19,6 @@ def select_house():
     if request.method == 'POST':
         post_data = request.get_json()
         house_number = post_data.get('houseNumber')
-
-        print("house number: ", house_number)
 
         house = get_house(house_number)
 
@@ -27,5 +31,40 @@ def select_house():
             response_object['payments'] = house['payments']
             response_object['fines'] = house['fines']
             response_object['message'] = 'House Informed!'
+
+    return jsonify(response_object)
+
+# Function to set a new condominium price to specific house
+@bp.route('/set_price', methods=('GET', 'POST'))
+def set_price():
+    response_object = {'status': 'success'}
+
+    if request.method == 'POST':
+        post_data = request.get_json()
+
+        house_number = post_data.get('house')
+        new_price = post_data.get('price')
+
+        message = set_new_price(house_number, new_price)
+
+        response_object['message'] = message
+
+    return jsonify(response_object)
+
+# Function to add new fines to specific house
+@bp.route('/apply_fine', methods=('GET', 'POST'))
+def apply_fine():
+    response_object = {'status': 'success'}
+
+    if request.method == 'POST':
+        post_data = request.get_json()
+
+        house_number = post_data.get('house')
+        reason = post_data.get('reason')
+        price = post_data.get('price')
+
+        message = apply_new_fine(house_number, reason, price)
+
+        response_object['message'] = message
 
     return jsonify(response_object)

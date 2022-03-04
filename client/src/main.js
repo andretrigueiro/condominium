@@ -14,7 +14,7 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
 Vue.use(VueCookies);
-Vue.$cookies.config('30d');
+Vue.$cookies.config('1d');
 
 Vue.config.productionTip = false;
 
