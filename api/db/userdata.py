@@ -53,18 +53,14 @@ HOUSES = [
         'onwer': 'condominium',
         'residents': [],
         'condominium price': 111.00,
-        'debts': [
-            {
-                'april': 0.00,
-                'may': 0.00,
-                'june': 0.00,
-                'july': 0.00
-            },
-        ],
         'payments': [
             {
                 'january': 'paid',
+            },
+            {
                 'february': 'paid',
+            },
+            {
                 'march': 'paid'
             },
         ],
@@ -75,18 +71,14 @@ HOUSES = [
         'onwer': '621fc9f0e1d5f250cadbf4d0',
         'residents': [],
         'condominium price': 222.00,
-        'debts': [
-            {
-                'april': 0.00,
-                'may': 0.00,
-                'june': 0.00,
-                'july': 0.00
-            },
-        ],
         'payments': [
             {
                 'january': 'paid',
+            },
+            {
                 'february': 'paid',
+            },
+            {
                 'march': 'paid'
             },
         ],
@@ -97,18 +89,14 @@ HOUSES = [
         'onwer': 'condominium',
         'residents': [],
         'condominium price': 333.00,
-        'debts': [
-            {
-                'april': 0.00,
-                'may': 0.00,
-                'june': 0.00,
-                'july': 0.00
-            },
-        ],
         'payments': [
             {
                 'january': 'paid',
+            },
+            {
                 'february': 'paid',
+            },
+            {
                 'march': 'paid'
             },
         ],
@@ -119,18 +107,14 @@ HOUSES = [
         'onwer': 'condominium',
         'residents': [],
         'condominium price': 444.00,
-        'debts': [
-            {
-                'april': 0.00,
-                'may': 0.00,
-                'june': 0.00,
-                'july': 0.00,
-            },
-        ],
         'payments': [
             {
                 'january': 'paid',
+            },
+            {
                 'february': 'paid',
+            },
+            {
                 'march': 'paid'
             },
         ],
@@ -141,18 +125,14 @@ HOUSES = [
         'onwer': 'condominium',
         'residents': [],
         'condominium price': 555.00,
-        'debts': [
-            {
-                'april': 0.00,
-                'may': 0.00,
-                'june': 0.00,
-                'july': 0.00,
-            },
-        ],
         'payments': [
             {
                 'january': 'paid',
+            },
+            {
                 'february': 'paid',
+            },
+            {
                 'march': 'paid'
             },
         ],
@@ -163,18 +143,14 @@ HOUSES = [
         'onwer': 'condominium',
         'residents': [],
         'condominium price': 666.00,
-        'debts': [
-            {
-                'april': 0.00,
-                'may': 0.00,
-                'june': 0.00,
-                'july': 0.00,
-            },
-        ],
         'payments': [
             {
                 'january': 'paid',
+            },
+            {
                 'february': 'paid',
+            },
+            {
                 'march': 'paid'
             },
         ],

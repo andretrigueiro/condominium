@@ -11,7 +11,7 @@
             <b-list-group-item button type="button" v-b-modal.payment-history-modal>
               Show payment history
             </b-list-group-item>
-            <b-list-group-item button type="button" v-b-modal.add-resident-modal>
+            <b-list-group-item button type="button" v-b-modal.make-payments-modal>
               Make payments
             </b-list-group-item>
             <b-list-group-item button type="button" v-b-modal.new-resident-modal>
@@ -31,6 +31,25 @@
               title="Payment History"
               hide-footer>
         <b-table striped stacked hover responsive :items="houseInfo.payments"></b-table>
+      </b-modal>
+
+      <!-- MAKE PAYMENTS -->
+      <b-modal ref="makePaymentsModal"
+              id="make-payments-modal"
+              title="Make Payments"
+              hide-footer>
+        <b-table striped hover responsive :items="houseInfo.fines"></b-table>
+        <p>Choose the Fine to be paid</p>
+
+        <b-form @submit="onSubmitPayment" class="w-100">
+
+          <b-form-select v-model="fineSelected" :options="fineOptions"></b-form-select>
+
+          <b-button-group>
+            <b-button type="submit" class="button-adjust" variant="success">Pay</b-button>
+          </b-button-group>
+
+        </b-form>
       </b-modal>
 
       <!-- NEW RESIDENT MODAL -->
@@ -136,12 +155,7 @@ export default {
       message: '',
       showMessage: false,
       fineSelected: null,
-      fineOptions: [
-        { value: null, text: 'Please select an option' },
-        { value: 'Delay', text: 'Delay' },
-        { value: 'Noise', text: 'Noise' },
-        { value: 'Dirt', text: 'Dirt' },
-      ],
+      fineOptions: [],
       residentHouseSelected: '',
       residentsHouseOptions: [],
       houseInfo: {
@@ -149,7 +163,6 @@ export default {
         onwer: '',
         residents: [],
         condominiumPrice: 0.00,
-        debts: [],
         payments: [],
         fines: [],
       },
@@ -175,25 +188,14 @@ export default {
       };
       this.getHouse(payload);
     },
-    getResidentsOptions() {
-      const path = 'http://localhost:5000/users/all_residents_options';
-      axios.get(path)
-        .then((res) => {
-          this.residentOptions = res.data.residents;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.log(error);
-        });
-    },
-    getResidentsOfHouseOptions() {
-      const path = 'http://localhost:5000/users/residents_of_house_options';
+    getFinesOptions() {
+      const path = 'http://localhost:5000/houses/fines_options';
       const payload = {
-        house: this.houseSelected,
+        house: this.houseInfo.number,
       };
       axios.post(path, payload)
         .then((res) => {
-          this.residentsHouseOptions = res.data.residents;
+          this.fineOptions = res.data.fines;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -245,6 +247,30 @@ export default {
       this.registerResident(payload);
       this.initForm();
     },
+    makePayment(payload) {
+      const path = 'http://localhost:5000/houses/make_payment';
+      axios.post(path, payload)
+        .then((res) => {
+          if (res.data.message === 'Payment made!') {
+            this.message = res.data.message;
+            this.showMessage = true;
+            this.$refs.makePaymentsModal.hide();
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+        });
+    },
+    onSubmitPayment(evt) {
+      evt.preventDefault();
+      const payload = {
+        fine: this.fineSelected,
+        house_number: this.$cookies.get('house'),
+      };
+      this.makePayment(payload);
+      this.initForm();
+    },
     initForm() {
       this.residentForm.user = '';
       this.residentForm.password = '';
@@ -259,9 +285,7 @@ export default {
   mounted() {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       console.log('Modal is about to be shown', bvEvent, modalId);
-      this.getResidentsOptions();
-      this.getResidentsOfHouseOptions();
-      console.log(this.residentsHouseOptions);
+      this.getFinesOptions();
     });
   },
   created() {
@@ -304,6 +328,10 @@ export default {
 
 .house-select-b {
   margin-right: 90%;
+}
+
+.button-adjust {
+  margin-top: 10px;
 }
 
 </style>

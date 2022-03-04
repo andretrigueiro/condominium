@@ -3,7 +3,7 @@ Houses related functions.
 In this project, the condominium properties are being treated as houses.
 """
 
-from api.db.mongodb.users_db import get_onwer, get_house, set_new_price, apply_new_fine
+from api.db.mongodb.users_db import get_onwer, get_house, set_new_price, apply_new_fine, get_fines_options, make_fine_payment
 
 from flask import (
     Blueprint, jsonify, request
@@ -27,7 +27,6 @@ def select_house():
             response_object['onwer'] = get_onwer(house['onwer'])
             response_object['residents'] = house['residents']
             response_object['condominiumP'] = house['condominium price']
-            response_object['debts'] = house['debts']
             response_object['payments'] = house['payments']
             response_object['fines'] = house['fines']
             response_object['message'] = 'House Informed!'
@@ -64,6 +63,34 @@ def apply_fine():
         price = post_data.get('price')
 
         message = apply_new_fine(house_number, reason, price)
+
+        response_object['message'] = message
+
+    return jsonify(response_object)
+
+@bp.route('/fines_options', methods=('GET', 'POST'))
+def fines_options():
+    response_object = {'status': 'success'}
+
+    if request.method == 'POST':
+        post_data = request.get_json()
+        house = post_data.get('house')
+        if house:
+            fines = get_fines_options(house)
+            response_object['fines'] = fines
+
+    return jsonify(response_object)
+
+@bp.route('/make_payment', methods=('GET', 'POST'))
+def make_payment():
+    response_object = {'status': 'success'}
+
+    if request.method == 'POST':
+        post_data = request.get_json()
+        house = post_data.get('house_number')
+        fine = post_data.get('fine')
+
+        message = make_fine_payment(house, fine)
 
         response_object['message'] = message
 

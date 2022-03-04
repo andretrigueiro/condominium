@@ -34,12 +34,12 @@ After that, use the pip tool to install the requirements. Run this command on te
 > (env)$ pip install -r api/requirements/requirements.txt
 
 ### Database config
-I used a .env file to store the MongoDB connection. If you want to do the same, install dotenv package with pip and set the variables in "/api/db/mongodb/__init__.py"
+I used a .env file to store the MongoDB connection. If you want to do the same, install dotenv package with pip and set the variables in "/api/db/mongodb/init.py"
 
 # How to run the project
 You will need 2 different terminals to run the application.
 
-The DATABASE does not come configured. You neet to set a .env with the DATABASE information.
+Note: The DATABASE does not come configured. You neet to set the variable to make the connection with your Mongo.
 
 ### Backend
 Open a new terminal. Acess the project folder and activate the env:
@@ -73,7 +73,7 @@ After that, you can close the terminal.
 
 Note: Remember to set the DATABASE connection.
 
-### Vue section
+### Frontend
 
 Open a new terminal. In the client folder of the project, activate vue:
 

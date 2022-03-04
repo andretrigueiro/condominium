@@ -2,6 +2,7 @@
 Functions to operate the dababase
 """
 
+from os import remove
 from api.db.mongodb import DATABASE
 from bson.objectid import ObjectId
 
@@ -40,6 +41,12 @@ def find_residents_in_house(house_number):
     residents_of_house = house["residents"]
     return residents_of_house
 
+# Get all residents of one specific house in database
+def find_fines_in_house(house_number):
+    house = get_house(house_number)
+    fines_of_house = house["fines"]
+    return fines_of_house
+
 # Search users in adm AND residents collections. Used within login function to define which view the page will redirect
 def find_by_user(user):
     result_adm = DATABASE.adm.find_one(user)
@@ -75,8 +82,11 @@ def get_onwer(resident_id):
 # Get one specific house, searched by number
 def get_house(house_number):
     house = DATABASE.houses.find_one({"number": house_number})
-    house = convert_one_id_to_string(house)
-    return house
+    if house is None:
+        return None
+    else:
+        house = convert_one_id_to_string(house)
+        return house
 
 # Get all residents registered in database
 def get_residents_options():
@@ -93,12 +103,24 @@ def get_residents_options():
 # Get residents registered in one specific house
 def get_residents_of_house_options(house):
     residents = find_residents_in_house(house)
-    print("residents: ", residents)
     final_list = []
     for resident in range(len(residents)):
         aux = {}
         aux['text'] = residents[resident]
         aux['value'] = residents[resident]
+        final_list.append(aux)
+
+    return final_list
+
+# Get fines of specific house
+def get_fines_options(house_number):
+    fines = find_fines_in_house(house_number)
+    print("fines: ", fines)
+    final_list = []
+    for fine in range(len(fines)):
+        aux = {}
+        aux['text'] = fines[fine]['reason'] + " - $" + str(fines[fine]['price'])
+        aux['value'] = fines[fine]['reason'] + " - $" + str(fines[fine]['price'])
         final_list.append(aux)
 
     return final_list
@@ -177,5 +199,31 @@ def apply_new_fine(house, reason, price):
 
     DATABASE.houses.update_one(selected_house, fine)
     message = "Fine Applied!"
+
+    return message
+
+# Function to ADD new fines to a specific house
+def make_fine_payment(house_number, fine):
+    reason = fine.rpartition(' -')[0]
+    price = fine.rpartition('$')[2]
+
+    remove_fine = {
+        'reason': reason,
+        'price': int(price)
+    }
+    add_payment = {
+        'Paid fine': fine
+    }
+
+    selected_house = { "number": house_number }
+
+    fine = { "$pull": { "fines": remove_fine } }
+
+    payment = { "$push": { "payments": add_payment } }
+
+    DATABASE.houses.update_one(selected_house, fine)
+    DATABASE.houses.update_one(selected_house, payment)
+
+    message = "Payment made!"
 
     return message

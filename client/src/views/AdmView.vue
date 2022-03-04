@@ -272,7 +272,6 @@ export default {
         onwer: '',
         residents: [],
         condominiumPrice: 0.00,
-        debts: [],
         payments: [],
         fines: [],
       },
