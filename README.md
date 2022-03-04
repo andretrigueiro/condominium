@@ -22,11 +22,12 @@ Backend:
 - dnspython latest version
 
 ### Installing
-- Install the frontend dependencies with npm. To configure Vue CLI, you can use the configuration of this tutorial:
+Install the frontend dependencies with npm. To configure Vue CLI, you can copy the configuration of this tutorial:
 > https://testdriven.io/blog/developing-a-single-page-app-with-flask-and-vuejs/
 
-- If you already have python installed, install the virtual enviroment. Acess the api directory and run this command::
+If you already have python installed, install the virtual enviroment. Acess the api directory and run these commands:
 > python3.9 -m venv env
+
 > source env/bin/activate
 
 After that, use the pip tool to install the requirements. Run this command on terminal:
@@ -49,6 +50,7 @@ The virtual environment should turn on and the terminal will be like this:
 Then, set the environment:
 
 > (env)$ export FLASK_APP=api
+
 > (env)$ export FLASK_ENV=development
 
 After that, run the application:
@@ -75,4 +77,6 @@ Open a new terminal. In the client folder of the project, activate vue:
 To test if the app is working fine, point your browser at http://localhost:8080. You should see:
 
 ![](/client/public/homepage.png)
+
+# How to use the project
 
