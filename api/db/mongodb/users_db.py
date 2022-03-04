@@ -38,6 +38,8 @@ def find_all_houses():
 # Get all residents of one specific house in database
 def find_residents_in_house(house_number):
     house = get_house(house_number)
+    if house is None:
+        return
     residents_of_house = house["residents"]
     return residents_of_house
 
@@ -161,6 +163,13 @@ def set_initial_onwer():
 
     convert_all_id_to_string(houses)
 
+def set_new_password(resident_id, password):
+    resident = find_resident_by_id(resident_id)
+    if resident:
+        selected_resident = { "user": resident['user'] }
+        new_password = { "$set": { "password": new_password } }
+        DATABASE.residents.update_one(selected_resident, new_password)
+
 """
 Other Functions ------------------------------------------------------------------------------------------------------
 """
@@ -204,6 +213,7 @@ def apply_new_fine(house, reason, price):
 
 # Function to ADD new fines to a specific house
 def make_fine_payment(house_number, fine):
+
     reason = fine.rpartition(' -')[0]
     price = fine.rpartition('$')[2]
 

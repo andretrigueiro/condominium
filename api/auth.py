@@ -12,7 +12,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from api.db.mongodb.users_db import find_by_user
+from api.db.mongodb.users_db import find_by_user, set_new_password
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -47,10 +47,36 @@ def login():
             session.modified = True
 
             response_object['user'] = user['user']
+            response_object['first_login'] = user['first_login']
             response_object['type'] = user['type']
             if user['type'] == 'resident':
                 response_object['house_number'] = user['house']
             response_object['message'] = 'User logged in!'
+
+    return jsonify(response_object)
+
+# Change the user password
+@bp.route('/change_password', methods=('GET', 'POST'))
+def change_password():
+    response_object = {'status': 'success'}
+
+    if request.method == 'POST':
+        post_data = request.get_json()
+
+        user_login = post_data.get('user')
+        new_password = post_data.get('password')
+        error = None
+
+        user = find_by_user({"user": user_login})
+        set_new_password(user['_id'], new_password)
+
+        if user is None:
+            response_object['message'] = 'Couldnt find user.'
+            response_object['user'] = ''
+            error = 'Couldnt find user.'
+
+        if error is None:
+            response_object['message'] = 'Password changed!'
 
     return jsonify(response_object)
 
