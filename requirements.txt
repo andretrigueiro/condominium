@@ -4,3 +4,5 @@ Flask-Session
 pymongo
 pymongo[aws]
 dnspython
+gunicorn
+python-dotenv
