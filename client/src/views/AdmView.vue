@@ -478,10 +478,10 @@ export default {
   },
   mounted() {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      console.log('Modal is about to be shown', bvEvent, modalId);
+      // console.log('Modal is about to be shown', bvEvent, modalId);
       this.getResidentsOptions();
       this.getResidentsOfHouseOptions();
-      console.log(this.residentsHouseOptions);
+      // console.log(this.residentsHouseOptions);
     });
   },
   created() {
