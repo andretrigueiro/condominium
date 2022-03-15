@@ -112,7 +112,7 @@ export default {
   },
   methods: {
     loginUser(payload) {
-      const path = 'http://18.231.124.87:5000/auth/login';
+      const path = 'http://18.231.124.87:7011/auth/login';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'User logged in!' && res.data.user !== '') {
@@ -154,7 +154,7 @@ export default {
       this.initForm();
     },
     firstLoginUser(payload) {
-      const path = 'http://18.231.124.87:5000/auth/change_password';
+      const path = 'http://18.231.124.87:7011/auth/change_password';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Password changed!') {

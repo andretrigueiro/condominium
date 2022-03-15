@@ -189,7 +189,7 @@ export default {
       this.getHouse(payload);
     },
     getFinesOptions() {
-      const path = 'http://172.31.2.180:5000/houses/fines_options';
+      const path = 'http://18.231.124.87:7011/houses/fines_options';
       const payload = {
         house: this.houseInfo.number,
       };
@@ -248,7 +248,7 @@ export default {
       this.initForm();
     },
     makePayment(payload) {
-      const path = 'http://172.31.2.180:5000/houses/make_payment';
+      const path = 'http://18.231.124.87:7011/houses/make_payment';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Payment made!') {
