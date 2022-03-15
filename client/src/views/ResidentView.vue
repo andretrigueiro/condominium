@@ -189,7 +189,7 @@ export default {
       this.getHouse(payload);
     },
     getFinesOptions() {
-      const path = 'http://18.231.124.87:7011/houses/fines_options';
+      const path = 'http://18.231.124.87:5000/houses/fines_options';
       const payload = {
         house: this.houseInfo.number,
       };
@@ -203,7 +203,7 @@ export default {
         });
     },
     getHouse(payload) {
-      const path = 'http://localhost:5000/houses/select_house';
+      const path = 'http://18.231.124.87:5000/houses/select_house';
       axios.post(path, payload)
         .then((res) => {
           this.message = res.data.message;
@@ -220,7 +220,7 @@ export default {
         });
     },
     registerResident(payload) {
-      const path = 'http://localhost:5000/users/set_new_resident';
+      const path = 'http://18.231.124.87:5000/users/set_new_resident';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Resident added!') {
@@ -248,7 +248,7 @@ export default {
       this.initForm();
     },
     makePayment(payload) {
-      const path = 'http://18.231.124.87:7011/houses/make_payment';
+      const path = 'http://18.231.124.87:5000/houses/make_payment';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Payment made!') {
