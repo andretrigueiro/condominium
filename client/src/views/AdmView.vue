@@ -304,7 +304,7 @@ export default {
       this.getHouse(payload);
     },
     getResidentsOptions() {
-      const path = 'http://18.231.124.87:5000/users/all_residents_options';
+      const path = 'http://15.228.223.7:7011/users/all_residents_options';
       axios.get(path)
         .then((res) => {
           this.residentOptions = res.data.residents;
@@ -315,7 +315,7 @@ export default {
         });
     },
     getResidentsOfHouseOptions() {
-      const path = 'http://18.231.124.87:5000/users/residents_of_house_options';
+      const path = 'http://15.228.223.7:7011/users/residents_of_house_options';
       const payload = {
         house: this.houseSelected,
       };
@@ -329,7 +329,7 @@ export default {
         });
     },
     getHouse(payload) {
-      const path = 'http://18.231.124.87:5000/houses/select_house';
+      const path = 'http://15.228.223.7:7011/houses/select_house';
       axios.post(path, payload)
         .then((res) => {
           this.message = res.data.message;
@@ -345,7 +345,7 @@ export default {
         });
     },
     registerResident(payload) {
-      const path = 'http://18.231.124.87:5000/users/set_new_resident';
+      const path = 'http://15.228.223.7:7011/users/set_new_resident';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Resident added!') {
@@ -375,7 +375,7 @@ export default {
       this.initForm();
     },
     addResident(payload) {
-      const path = 'http://18.231.124.87:5000/users/add_new_resident';
+      const path = 'http://15.228.223.7:7011/users/add_new_resident';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Resident added to house!') {
@@ -398,7 +398,7 @@ export default {
       this.initForm();
     },
     removeResidentFromHouse(payload) {
-      const path = 'http://18.231.124.87:5000/users/remove_resident_house';
+      const path = 'http://15.228.223.7:7011/users/remove_resident_house';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Resident removed of house!') {
@@ -421,7 +421,7 @@ export default {
       this.initForm();
     },
     setCondPrice(payload) {
-      const path = 'http://18.231.124.87:5000/houses/set_price';
+      const path = 'http://15.228.223.7:7011/houses/set_price';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'New Price Updated!') {
@@ -443,7 +443,7 @@ export default {
       this.setCondPrice(payload);
     },
     applyFine(payload) {
-      const path = 'http://18.231.124.87:5000/houses/apply_fine';
+      const path = 'http://15.228.223.7:7011/houses/apply_fine';
       axios.post(path, payload)
         .then((res) => {
           if (res.data.message === 'Fine Applied!') {
